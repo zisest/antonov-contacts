@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Simple app for managing your address book">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Contacts</title>
+
+  <!-- Disable tap highlight on IE -->
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Simple Contacts">
+  <meta name="theme-color" content="#303F9F">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Simple Contacts">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+  <!-- Tile icon for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-navbutton-color" content="#303F9F">
+
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-orange.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+  <!-- App Styling -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i&amp;subset=cyrillic">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header section containing logo -->
+  <header class="mdl-layout__header">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <h3><i class="material-icons">clear_all</i> Simple Contacts</h3>
+      </div>
+      <div id="user-container">
+        <div hidden id="user-pic"></div>
+        <div hidden id="user-name"></div>
+        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          Sign-out
+        </button>
+        <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          <i class="material-icons">account_circle</i> Sign-in with Google
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+
+      <!-- the container -->
+      <div id="contacts-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <div class="main-container">
+          <!-- shown when signed out-->
+          <div hidden id="welcome-block">
+            <h1 class="welcome-text">
+              Address Book. That's it.
+            </h1>
+            <div class="mdl-grid features-grid">
+              <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet">
+                <h4><i class="material-icons">flash_on</i> Get Started Quickly</h4>
+                <p>
+                  All you need to get started is to sign up with your Google account. Simple as that.
+                </p>
+              </div>
+              <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet">
+                <h4><i class="material-icons">perm_contact_calendar</i> Personalized Contacts</h4>
+                <p>
+                  Every person in your life. Their phone number, home address, the dog's name &ndash; you name it, everything is at your fingertips.
+                </p>
+              </div>
+              <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet">
+                <h4><i class="material-icons">cloud</i> Access Everywhere</h4>
+                <p>
+                  You don't have to worry of forgetting your notepad or drowning your phone. Your contacts are always with you. Everywhere with you.
+                </p>
+              </div>
+            </div>
+            <div class="get-started">
+              <button id="sign-in-2" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored ">
+                GET STARTED
+              </button>
+              <p>Simple access to all of your contacts. Right here. Right now.</p>
+            </div>
+          </div>
+          <!-- shown when signed in-->
+          <div hidden id="contacts-block">
+            <button id="button-add-contact" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+              <i class="material-icons">add</i>
+            </button>
+            <p class="contacts-title">Contacts</p>
+            <div id="contacts" class="mdl-list">
+              <span id="contact-filler"></span>
+            </div>
+
+
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <dialog class="mdl-dialog mdl-cell--6-col" id="new-contact-dialog">
+        <h4 class="mdl-dialog__title">New contact</h4>
+        <form>
+        <div class="mdl-dialog__content">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="first-name">
+            <label class="mdl-textfield__label" for="first-name">First name</label>
+            <span class="mdl-textfield__error">Required field</span>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="last-name">
+            <label class="mdl-textfield__label" for="last-name">Last name</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="phone">
+            <label class="mdl-textfield__label" for="phone">Phone</label>
+            <span class="mdl-textfield__error">Digits only</span>
+          </div>
+        </div>
+        <div class="mdl-dialog__actions">
+          <input type="submit" value="Create" class="mdl-button" id="create-contact-btn">
+          <button type="button" class="mdl-button close">Close</button>
+        </div>
+        </form>
+      </dialog>
+
+      <dialog class="mdl-dialog mdl-cell--6-col" id="expand-contact-dialog">
+        <h4 class="mdl-dialog__title">Title</h4>
+        <div class="mdl-dialog__content">
+          Text
+        </div>
+        <div class="mdl-dialog__actions">
+         <button type="button" class="mdl-button close">Close</button>
+        </div>
+      </dialog>
+
+      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Import and configure the Firebase SDK -->
+<!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
+<!-- If you do not want to serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
+<script src="/__/firebase/5.6.0/firebase-app.js"></script>
+<script src="/__/firebase/5.6.0/firebase-auth.js"></script>
+<script src="/__/firebase/5.6.0/firebase-database.js"></script>
+<script src="/__/firebase/5.6.0/firebase-storage.js"></script>
+<script src="/__/firebase/5.6.0/firebase-messaging.js"></script>
+<script src="/__/firebase/init.js"></script>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>
