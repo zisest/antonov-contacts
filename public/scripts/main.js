@@ -44,6 +44,7 @@ function newContactDialog(){    //
     newContactDialogElement.querySelector('.close').addEventListener('click', function() {
         newContactDialogElement.close();
     });
+    console.log
 }
 function addContact() {
     return firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
@@ -56,22 +57,35 @@ function addContact() {
 }
 function expandContactDialog(contactID){
     expandContactDialogElement.showModal();
-    expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML = contactID;
+    expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML = '';
+    firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
+        snapshot.forEach(function(item){
+            if(item.val() != '') {
+
+                expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.key + ' ';
+                expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.val() + ' ';
+            }
+        });
+    });
     expandContactDialogElement.querySelector('.close').addEventListener('click', function() {
+        expandContactDialogElement.close();
+    });
+    expandContactDialogElement.querySelector('.deleteContactButton').addEventListener('click', function() {
+        deleteContact(contactID);
+        
         expandContactDialogElement.close();
     });
 }
 
-
-//sends user info to DB --realized in Cloud Functions
-// function fillDB() {
-//     return firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
-//         firstname: 'Anton',
-//         lastname: 'Kozlov'
-//     }).catch(function(error) {
-//         console.error('Error writing new message to Realtime Database:', error);
-//     });
-// }
+function deleteContact(contactID) {
+    firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).remove()
+        .then(function() {
+            console.log("Remove succeeded.")
+        })
+        .catch(function(error) {
+            console.log("Remove failed: " + error.message)
+        });
+}
 
 
 //var userID;
@@ -114,22 +128,20 @@ function authStateObserver(user) {
 }
 
 // Returns true if user is signed-in. Otherwise false and displays a message.
-function checkSignedInWithMessage() {
-    // Return true if the user is signed in Firebase
-    if (isUserSignedIn()) {
-        return true;
-    }
-
-    // Display a message to the user using a Toast.
-    var data = {
-        message: 'You must sign-in first',
-        timeout: 2000
-    };
-    signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
-    return false;
-}
-
-
+// function checkSignedInWithMessage() {
+//     // Return true if the user is signed in Firebase
+//     if (isUserSignedIn()) {
+//         return true;
+//     }
+//
+//     // Display a message to the user using a Toast.
+//     var data = {
+//         message: 'You must sign-in first',
+//         timeout: 2000
+//     };
+//     signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+//     return false;
+// }
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 function checkSetup() {
@@ -150,7 +162,7 @@ var userNameElement = document.getElementById('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signInButton2Element = document.getElementById('sign-in-2');
 var signOutButtonElement = document.getElementById('sign-out');
-var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+//var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var welcomeBlockElement = document.getElementById('welcome-block');
 var contactsBlockElement = document.getElementById('contacts-block');
 var addContactButtonElement = document.getElementById('button-add-contact');
@@ -171,7 +183,7 @@ createContactButtonElement.addEventListener('click', addContact);
 
 
 
-// Displays a Message in the UI. //CHANGE
+// Displays user's contacts
 function displayContact(key, firstname, lastname) {
     var div = document.getElementById(key);
     // If an element for that message does not exists yet we create it.
@@ -197,7 +209,7 @@ function expandContact(contactID) {
     expandContactDialog(contactID);
 }
 
-// Template for messages.//change
+// OLD OLD TEMPLATE
 // var CONTACT_TEMPLATE =
 //     '<div class="contact-container">' +
 //     '<div class="spacing"><div class="pic"></div></div>' +
@@ -213,19 +225,32 @@ var CONTACT_TEMPLATE =
     '</span>'+
     '</div>';
 
-// Loads chat messages history and listens for upcoming ones.
+var numberOfContacts = 0;
 function loadContacts(uid) {
     // Loads all of the contacts
     var callback = function(snap) {
+        //Hiding the 'You don't have any contacts + Create new ones' message
+        if(numberOfContacts == 0){
+        //
+
+        }else{
+
+        }
+
         var data = snap.val();
         displayContact(snap.key, data.firstname, data.lastname);
+        ++numberOfContacts;
     };
 
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_added', callback);
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_changed', callback);
-    //firebase.database().ref('/users/' + uid + '/contacts/').on('child_removed', callback);
+    firebase.database().ref('/users/' + uid + '/contacts/').on('child_removed', callback);
 }
 
+//checking if user has contacts
+function contactsNotZero(){
+
+}
 
 // initialize Firebase
 initFirebaseAuth();

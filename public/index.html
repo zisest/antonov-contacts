@@ -61,7 +61,6 @@
 
   <main class="mdl-layout__content mdl-color--grey-100">
     <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
-
       <!-- the container -->
       <div id="contacts-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
         <div class="main-container">
@@ -106,15 +105,12 @@
             <div id="contacts" class="mdl-list">
               <span id="contact-filler"></span>
             </div>
-
-
-
-
           </div>
 
         </div>
       </div>
 
+      <!-- Create new contact dialog -->
       <dialog class="mdl-dialog mdl-cell--6-col" id="new-contact-dialog">
         <h4 class="mdl-dialog__title">New contact</h4>
         <form>
@@ -141,24 +137,28 @@
         </form>
       </dialog>
 
+      <!-- Expanded contact information dialog-->
       <dialog class="mdl-dialog mdl-cell--6-col" id="expand-contact-dialog">
         <h4 class="mdl-dialog__title">Title</h4>
         <div class="mdl-dialog__content">
           Text
         </div>
         <div class="mdl-dialog__actions">
-         <button type="button" class="mdl-button close">Close</button>
+            <button type="button" class="mdl-button mdl-js-button deleteContactButton">Delete</button>
+            <button type="button" class="mdl-button close">Close</button>
         </div>
       </dialog>
 
-      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
-        <div class="mdl-snackbar__text"></div>
-        <button class="mdl-snackbar__action" type="button"></button>
-      </div>
+      <!-- must sign in snack bar (NOT NEEDED)-->
+      <!--<div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">-->
+        <!--<div class="mdl-snackbar__text"></div>-->
+        <!--<button class="mdl-snackbar__action" type="button"></button>-->
+      <!--</div>-->
 
     </div>
   </main>
 </div>
+
 
 <!-- Import and configure the Firebase SDK -->
 <!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->

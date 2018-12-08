@@ -257,3 +257,12 @@ main, #contacts-card {
 .contact-container:hover{
     background-color: #F5F5F5;
 }
+
+
+.deleteContactButton{
+  color: red;
+}
+.deleteContactButton:hover{
+  color: white;
+  background-color: red;
+}
