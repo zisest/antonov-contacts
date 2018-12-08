@@ -43,18 +43,22 @@ function newContactDialog(){    //
     newContactDialogElement.querySelector('.close').addEventListener('click', function() {
         newContactDialogElement.close();
     });
-    newContactDialogElement.querySelector('#create-contact-btn').addEventListener('click', addContact);
+   // newContactDialogElement.querySelector('#create-contact-btn').addEventListener('click', addContact);
 }
 function addContact() {
     //переделать
     contactListEmpty();
-    return firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
+    firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
         firstname: firstNameFieldElement.value,
         lastname: lastNameFieldElement.value,
         phone: phoneFieldElement.value
     }).catch(function(error) {
         console.error('Error writing new message to Realtime Database:', error);
     });
+    firstNameFieldElement.value ='';
+    lastNameFieldElement.value ='';
+    phoneFieldElement.value ='';
+    newContactDialogElement.close();
 }
 function expandContactDialog(contactID){
     expandContactDialogElement.showModal();
@@ -97,7 +101,7 @@ function contactListEmpty() {
         }else{
             contactListEmptyElement.setAttribute('hidden', true);
         }
-    }, 1000)
+    }, 1200)
 }
 
 
@@ -260,8 +264,6 @@ function loadContacts(uid) {
     // Loads all of the contacts
     var callback = function(snap) {
         //Hiding the 'You don't have any contacts + Create new ones' message
-
-
         var data = snap.val();
         displayContact(snap.key, data.firstname, data.lastname, data.phone);
 
