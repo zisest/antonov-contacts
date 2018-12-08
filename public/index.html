@@ -102,8 +102,11 @@
               <i class="material-icons">add</i>
             </button>
             <p class="contacts-title">Contacts</p>
-            <div id="contacts" class="mdl-list">
-              <span id="contact-filler"></span>
+            <div id="contacts" class="mdl-list"></div>
+
+            <!-- shown when list is empty -->
+            <div id="contact-list-empty" hidden>
+                You don't have any contacts yet! <a href="#">Create a contact.</a>
             </div>
           </div>
 
@@ -137,9 +140,11 @@
         </form>
       </dialog>
 
+
+      
       <!-- Expanded contact information dialog-->
       <dialog class="mdl-dialog mdl-cell--6-col" id="expand-contact-dialog">
-        <h4 class="mdl-dialog__title">Title</h4>
+        <h4 class="mdl-dialog__title"></h4>
         <div class="mdl-dialog__content">
           Text
         </div>

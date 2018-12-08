@@ -266,3 +266,14 @@ main, #contacts-card {
   color: white;
   background-color: red;
 }
+
+
+#contact-list-empty {
+
+  font-size: 18px;
+}
+
+
+.mdl-data-table{
+border: none;
+}

@@ -6,11 +6,10 @@ function signIn() {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider);
 }
-
 // Signs-out of Simple Contacts
 function signOut() {
     // Sign out of Firebase.
-    contactsElement.innerHTML='<span id="contact-filler"></span>'
+    contactsElement.innerHTML='';
     firebase.auth().signOut();
 }
 
@@ -44,9 +43,11 @@ function newContactDialog(){    //
     newContactDialogElement.querySelector('.close').addEventListener('click', function() {
         newContactDialogElement.close();
     });
-    console.log
+    newContactDialogElement.querySelector('#create-contact-btn').addEventListener('click', addContact);
 }
 function addContact() {
+    //переделать
+    contactListEmpty();
     return firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
         firstname: firstNameFieldElement.value,
         lastname: lastNameFieldElement.value,
@@ -58,10 +59,11 @@ function addContact() {
 function expandContactDialog(contactID){
     expandContactDialogElement.showModal();
     expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML = '';
+
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
+        expandContactDialogElement.querySelector('.mdl-dialog__title').innerHTML = snapshot.val().firstname + ' ' + snapshot.val().lastname;
         snapshot.forEach(function(item){
             if(item.val() != '') {
-
                 expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.key + ' ';
                 expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.val() + ' ';
             }
@@ -72,8 +74,9 @@ function expandContactDialog(contactID){
     });
     expandContactDialogElement.querySelector('.deleteContactButton').addEventListener('click', function() {
         deleteContact(contactID);
-        
+        contactsElement.removeChild(document.getElementById(contactID));
         expandContactDialogElement.close();
+        contactListEmpty();
     });
 }
 
@@ -85,6 +88,16 @@ function deleteContact(contactID) {
         .catch(function(error) {
             console.log("Remove failed: " + error.message)
         });
+}
+
+function contactListEmpty() {
+    setTimeout(function () {
+        if (contactsElement.innerHTML == ''){
+            contactListEmptyElement.removeAttribute('hidden');
+        }else{
+            contactListEmptyElement.setAttribute('hidden', true);
+        }
+    }, 1000)
 }
 
 
@@ -101,6 +114,8 @@ function authStateObserver(user) {
         userPicElement.style.backgroundImage = 'url(' + profilePicUrl + ')';
         userNameElement.textContent = userName;
         loadContacts(getUserID());
+        contactListEmpty();
+
 
         // Show user's profile and sign-out button.
         userNameElement.removeAttribute('hidden');
@@ -175,11 +190,15 @@ var firstNameFieldElement = document.getElementById('first-name');
 var lastNameFieldElement = document.getElementById('last-name');
 var phoneFieldElement = document.getElementById('phone');
 
+var contactListEmptyElement = document.getElementById('contact-list-empty')
+
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
 signInButton2Element.addEventListener('click', signIn);
 addContactButtonElement.addEventListener('click', newContactDialog);
-createContactButtonElement.addEventListener('click', addContact);
+//createContactButtonElement.addEventListener('click', addContact);
+contactListEmptyElement.querySelector('a').addEventListener('click', newContactDialog);
+
 
 
 
@@ -197,7 +216,9 @@ function displayContact(key, firstname, lastname) {
     }
 
     div.querySelector('.name').textContent = firstname + ' ' + lastname;
-    //div.addEventListener('click', expandContact(key));
+
+
+
 
     // // Show the card fading-in and scroll to view the new message.
     // setTimeout(function() {div.classList.add('visible')}, 1);
@@ -225,26 +246,30 @@ var CONTACT_TEMPLATE =
     '</span>'+
     '</div>';
 
-var numberOfContacts = 0;
+//new template TABLE MDL:
+// var CONTACT_TEMPLATE =
+//     '<tr class="not-important">'+
+//     '<td class="name">a</td>'+
+//     '<td class="phone">b</td>'+
+//     '</tr>';
+
+
+
+
 function loadContacts(uid) {
     // Loads all of the contacts
     var callback = function(snap) {
         //Hiding the 'You don't have any contacts + Create new ones' message
-        if(numberOfContacts == 0){
-        //
 
-        }else{
-
-        }
 
         var data = snap.val();
-        displayContact(snap.key, data.firstname, data.lastname);
-        ++numberOfContacts;
+        displayContact(snap.key, data.firstname, data.lastname, data.phone);
+
     };
 
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_added', callback);
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_changed', callback);
-    firebase.database().ref('/users/' + uid + '/contacts/').on('child_removed', callback);
+
 }
 
 //checking if user has contacts
