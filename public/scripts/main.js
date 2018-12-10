@@ -45,33 +45,86 @@ function newContactDialog(){    //
     });
    // newContactDialogElement.querySelector('#create-contact-btn').addEventListener('click', addContact);
 }
+//old:
 function addContact() {
     //переделать
     contactListEmpty();
     firebase.database().ref('/users/' + getUserID() + '/contacts/').push({
         firstname: firstNameFieldElement.value,
         lastname: lastNameFieldElement.value,
-        phone: phoneFieldElement.value
+        number: numberFieldElement.value
     }).catch(function(error) {
         console.error('Error writing new message to Realtime Database:', error);
     });
     firstNameFieldElement.value ='';
     lastNameFieldElement.value ='';
-    phoneFieldElement.value ='';
+    numberFieldElement.value ='';
     newContactDialogElement.close();
 }
+
+function NEWaddContact() {
+    contactListEmpty();
+    var contactListRef = firebase.database().ref('/users/' + getUserID() + '/contacts/');
+    var newContactRef =  contactListRef.push();
+    newContactRef.set({'First--name': firstNameFieldElement.value})
+
+    newContactDialogElement.querySelectorAll('.mdl-textfield__input').forEach(function(field){
+        if (field.value != '') {
+            var fieldName = field.id;
+            newContactRef.update({
+                [fieldName]: field.value
+            }).catch(function (error) {
+                console.error('Error writing new message to Realtime Database:', error);
+            });
+            field.value = '';
+        }
+    });
+    newContactDialogElement.close();
+}
+
+//OLD expand contact DO NOT DELETE
+// function OLDexpandContactDialog(contactID){
+//     expandContactDialogElement.showModal();
+//     expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML = '';
+//
+//     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
+//         var firstname = 'First--name';
+//         var lastname = 'Last--name';
+//         expandContactDialogElement.querySelector('.mdl-dialog__title').innerHTML = snapshot.val(firstname) + ' ' + snapshot.val().[lastname];
+//         snapshot.forEach(function(item){
+//             if(item.val() != '') {
+//                 expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.key + ' ';
+//                 expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.val() + ' ';
+//             }
+//         });
+//     });
+//     expandContactDialogElement.querySelector('.close').addEventListener('click', function() {
+//         expandContactDialogElement.close();
+//     });
+//     expandContactDialogElement.querySelector('.deleteContactButton').addEventListener('click', function() {
+//         deleteContact(contactID);
+//         contactsElement.removeChild(document.getElementById(contactID));
+//         expandContactDialogElement.close();
+//         contactListEmpty();
+//     });
+// }
+
+
 function expandContactDialog(contactID){
     expandContactDialogElement.showModal();
     expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML = '';
 
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
-        expandContactDialogElement.querySelector('.mdl-dialog__title').innerHTML = snapshot.val().firstname + ' ' + snapshot.val().lastname;
-        snapshot.forEach(function(item){
-            if(item.val() != '') {
-                expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.key + ' ';
-                expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += item.val() + ' ';
-            }
-        });
+        //firstname + ((lastname) ? (' ' + lastname) : '');
+        expandContactDialogElement.querySelector('.mdl-dialog__title').innerHTML = snapshot.val()['First--name'] +
+            ((snapshot.val()['Last--name']) ? (' ' + snapshot.val()['Last--name']) : '');
+        var data = snapshot.val();
+        console.log(data);
+        for (var field in data){
+            expandContactDialogElement.querySelector('.mdl-dialog__content').innerHTML += field.replace(/--/g, ' ') + ': ' + data[field] + '<br>';
+        }
+       // expandContactDialogElement.innerHTML = expandContactDialogElement.innerHTML.replace(/--/g, ' ');
+
     });
     expandContactDialogElement.querySelector('.close').addEventListener('click', function() {
         expandContactDialogElement.close();
@@ -190,9 +243,9 @@ var createContactButtonElement = document.getElementById('create-contact-btn');
 var newContactDialogElement = document.getElementById('new-contact-dialog');
 var expandContactDialogElement = document.getElementById('expand-contact-dialog')
 
-var firstNameFieldElement = document.getElementById('first-name');
-var lastNameFieldElement = document.getElementById('last-name');
-var phoneFieldElement = document.getElementById('phone');
+var firstNameFieldElement = document.getElementById('First--name');
+var lastNameFieldElement = document.getElementById('Last--name');
+var numberFieldElement = document.getElementById('Phone--number');
 
 var contactListEmptyElement = document.getElementById('contact-list-empty')
 
@@ -207,7 +260,7 @@ contactListEmptyElement.querySelector('a').addEventListener('click', newContactD
 
 
 // Displays user's contacts
-function displayContact(key, firstname, lastname) {
+function displayContact(key, firstname, lastname, phone) {
     var div = document.getElementById(key);
     // If an element for that message does not exists yet we create it.
     if (!div) {
@@ -219,7 +272,8 @@ function displayContact(key, firstname, lastname) {
         div.addEventListener('click', function(){expandContact(key)});
     }
 
-    div.querySelector('.name').textContent = firstname + ' ' + lastname;
+    div.querySelector('.name').textContent = firstname + ((lastname) ? (' ' + lastname) : '');
+
 
 
 
@@ -264,8 +318,7 @@ function loadContacts(uid) {
     // Loads all of the contacts
     var callback = function(snap) {
         //Hiding the 'You don't have any contacts + Create new ones' message
-        var data = snap.val();
-        displayContact(snap.key, data.firstname, data.lastname, data.phone);
+        displayContact(snap.key, snap.val()['First--name'], snap.val()['Last--name'], snap.val()['Phone--number']);
 
     };
 

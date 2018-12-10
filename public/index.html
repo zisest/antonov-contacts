@@ -116,26 +116,45 @@
       <!-- Create new contact dialog -->
       <dialog class="mdl-dialog mdl-cell--6-col" id="new-contact-dialog">
         <h4 class="mdl-dialog__title">New contact</h4>
-        <form action="javascript:addContact()">
+        <form action="javascript:NEWaddContact()">
         <div class="mdl-dialog__content">
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input required class="mdl-textfield__input" type="text" id="first-name">
-            <label class="mdl-textfield__label" for="first-name">First name</label>
+            <input required class="mdl-textfield__input" type="text" maxlength="32" id="First--name">
+            <label class="mdl-textfield__label" for="First--name">First name</label>
             <span class="mdl-textfield__error">Required field</span>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" id="last-name">
-            <label class="mdl-textfield__label" for="last-name">Last name</label>
+            <input class="mdl-textfield__input" type="text" maxlength="32" id="Last--name">
+            <label class="mdl-textfield__label" for="Last--name">Last name</label>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="phone">
-            <label class="mdl-textfield__label" for="phone">Phone</label>
+            <input class="mdl-textfield__input" type="text" maxlength="32" id="Middle--name">
+            <label class="mdl-textfield__label" for="Middle--name">Middle name</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="Phone--number">
+            <label class="mdl-textfield__label" for="Phone--number">Phone number</label>
             <span class="mdl-textfield__error">Digits only</span>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="email" id="e-mail">
-            <label class="mdl-textfield__label" for="e-mail">E-mail</label>
+            <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="Work--phone">
+            <label class="mdl-textfield__label" for="Work--phone">Work phone</label>
+            <span class="mdl-textfield__error">Digits only</span>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="email" maxlength="32" id="E-mail">
+            <label class="mdl-textfield__label" for="E-mail">E-mail</label>
             <span class="mdl-textfield__error">Incorrect format</span>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" maxlength="128" id="Address">
+            <label class="mdl-textfield__label" for="address">Address</label>
+            <span class="mdl-textfield__error">Incorrect format</span>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" pattern="^([0-2][0-9]|(3)[0-1])([.])(((0)[0-9])|((1)[0-2]))(([.])\d{4})?$" id="Birthdate">
+            <label class="mdl-textfield__label" for="Birthdate">Birthdate</label>
+            <span class="mdl-textfield__error">Correct format: 'dd.mm' or 'dd.mm.yyyy'</span>
           </div>
         </div>
         <div class="mdl-dialog__actions">

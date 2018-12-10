@@ -179,10 +179,10 @@ main, #contacts-card {
   }
 }
 .mdl-textfield__label:after {
-  background-color: #0288D1;
+  background-color: rgb(255, 171, 64);
 }
 .mdl-textfield--floating-label.is-focused .mdl-textfield__label {
-  color: #0288D1;
+  color: rgb(255, 171, 64);
 }
 /*.mdl-button .material-icons  {*/
   /*top: -1px;*/
