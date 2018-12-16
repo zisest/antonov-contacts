@@ -116,8 +116,21 @@
       <!-- Create new contact dialog -->
       <dialog class="mdl-dialog mdl-cell--6-col" id="new-contact-dialog">
         <h4 class="mdl-dialog__title">New contact</h4>
-        <form action="javascript:NEWaddContact()">
+        <form action="javascript:NEWaddContact()" id="upload-contact-photo-form">
         <div class="mdl-dialog__content">
+          <!--PICTURE UPLOAD-->
+
+          <div>
+            <input id="upload-contact-photo" type="file" accept="image/png, image/jpeg" capture="camera">
+            <span class="mdl-chip mdl-chip--contact">
+              <label for="upload-contact-photo" class="mdl-button mdl-chip__contact mdl-js-button mdl-button--fab mdl-button--colored">
+              <i class="material-icons">attach_file</i>
+            </label>
+              <span class="mdl-chip__text" id="upload-contact-photo-filename">Upload contact photo</span>
+            </span>
+          </div>
+
+
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input required class="mdl-textfield__input" type="text" maxlength="32" id="First--name">
             <label class="mdl-textfield__label" for="First--name">First name</label>
@@ -167,10 +180,22 @@
 
 
       <!-- Expanded contact information dialog-->
-      <dialog class="mdl-dialog mdl-cell--6-col" id="expand-contact-dialog">
-        <h4 class="mdl-dialog__title"></h4>
+      <dialog class=" mdl-dialog mdl-cell--5-col" id="expand-contact-dialog">
+        <!--<h4 class="mdl-dialog__title"></h4>-->
         <div class="mdl-dialog__content">
-          Text
+          <div class="contact-dialog-upper mdl-grid">
+              <img class="contact-photo" src="images/profile_placeholder.png">
+              <div class="contact-name-container">
+                <h2 class="contact-name">Name Surname</h2>
+              </div>
+              <button class="mdl-button mdl-js-button mdl-button--icon ">
+                <i class="material-icons">edit</i>
+              </button>
+          </div>
+          <div class="contact-dialog-lower">
+
+
+          </div>
         </div>
         <div class="mdl-dialog__actions">
             <button type="button" class="mdl-button mdl-js-button deleteContactButton">Delete</button>
@@ -178,26 +203,26 @@
         </div>
       </dialog>
 
-      <!-- Deletion confirmation dialog -->
-      <dialog class="mdl-dialog" id="deletion-confirmation-dialog">
-        <h5 class="mdl-dialog__title">Are you sure you want to delete this contact?</h5>
-        <div class="mdl-dialog__content">
-          <p>
-            There's no going back.
-          </p>
-        </div>
-        <div class="mdl-dialog__actions">
-          <button type="button" class="mdl-button confirm-deletion">Delete</button>
-          <button type="button" class="mdl-button close">Close</button>
-        </div>
-      </dialog>
+      <!--&lt;!&ndash; Deletion confirmation dialog &ndash;&gt;-->
+      <!--<dialog class="mdl-dialog" id="deletion-confirmation-dialog">-->
+        <!--<h5 class="mdl-dialog__title">Are you sure you want to delete this contact?</h5>-->
+        <!--<div class="mdl-dialog__content">-->
+          <!--<p>-->
+            <!--There's no going back.-->
+          <!--</p>-->
+        <!--</div>-->
+        <!--<div class="mdl-dialog__actions">-->
+          <!--<button type="button" class="mdl-button confirm-deletion">Delete</button>-->
+          <!--<button type="button" class="mdl-button close">Close</button>-->
+        <!--</div>-->
+      <!--</dialog>-->
 
 
-      <!-- must sign in snack bar (NOT NEEDED)-->
-      <!--<div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">-->
-        <!--<div class="mdl-snackbar__text"></div>-->
-        <!--<button class="mdl-snackbar__action" type="button"></button>-->
-      <!--</div>-->
+       <!--must sign in snack bar (NOT NEEDED)-->
+      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
 
     </div>
   </main>

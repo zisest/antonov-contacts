@@ -5,10 +5,7 @@ main, #contacts-card {
   height: 100%;
   padding-bottom: 0;
 }
-#messages-card-container {
-  height: calc(100% - 35px);
-  padding-bottom: 0;
-}
+
 #contacts-card {
   margin-top: 15px;
 }
@@ -46,68 +43,14 @@ main, #contacts-card {
   display: flex;
   flex-direction: column;
 }
-#message-filler {
-  flex-grow: 1;
-}
-.message-container:first-of-type {
-  border-top-width: 0;
-}
-.message-container {
-  display: block;
-  margin-top: 10px;
-  border-top: 1px solid #f3f3f3;
-  padding-top: 10px;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-.message-container.visible {
-  opacity: 1;
-}
-.message-container .pic {
-  background-image: url('/images/profile_placeholder.png');
-  background-repeat: no-repeat;
-  width: 30px;
-  height: 30px;
-  background-size: 30px;
-  border-radius: 20px;
-}
-.message-container .spacing {
-  display: table-cell;
-  vertical-align: top;
-}
-.message-container .message {
-  display: table-cell;
-  width: calc(100% - 40px);
-  padding: 5px 0 5px 10px;
-}
-.message-container .name {
-  display: inline-block;
-  width: 100%;
-  padding-left: 40px;
-  color: #bbb;
-  font-style: italic;
-  font-size: 12px;
-  box-sizing: border-box;
-}
-#message-form {
-  display: flex;
-  flex-direction: row;
-  width: calc(100% - 48px);
-  float: left;
-}
+
 #image-form {
   display: flex;
   flex-direction: row;
   width: 48px;
   float: right;
 }
-#message-form .mdl-textfield {
-  width: calc(100% - 100px);
-}
-#message-form button, #image-form button {
-  width: 100px;
-  margin: 15px 0 0 10px;
-}
+
 .mdl-card {
   min-height: 0;
 }
@@ -156,9 +99,7 @@ main, #contacts-card {
   max-width: 300px;
   max-height: 200px;
 }
-#mediaCapture {
-  display: none;
-}
+
 @media screen and (max-width: 610px) {
   header {
     height: 113px;
@@ -250,15 +191,18 @@ main, #contacts-card {
   width: fit-content;
 }
 
-.mdl-dialog{
-  /*width: 50%;*/
+
+#new-contact-dialog {
+  /* width: 50%; */
+  width: fit-content;
+  max-width: 652px;
 }
 
-.contact-container:hover{
-    background-color: #F5F5F5;
+
+.contact-container:hover {
+  background-color: #F5F5F5;
+  cursor: pointer;
 }
-
-
 .deleteContactButton{
   color: red;
 }
@@ -269,11 +213,73 @@ main, #contacts-card {
 
 
 #contact-list-empty {
-
   font-size: 18px;
 }
 
-
 .mdl-data-table{
 border: none;
+}
+
+
+/*PICTURE UPLOAD*/
+#upload-contact-photo{
+  display: none;
+}
+
+.mdl-chip__contact {
+  height: 38px;
+}
+.mdl-chip {
+  height: 38px;
+}
+.mdl-chip__text{
+  font-size: 16px;
+}
+
+
+.contact-photo{
+  object-fit: cover;
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  margin: 0 15px 0 20px;
+  display: block;
+}
+.contact-name{
+  height: fit-content;
+  word-wrap: break-word;
+}
+.contact-name-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+.mdl-dialog{
+  border-radius: 8px;
+  padding: 10px 10px 14px 10px;
+}
+.mdl-dialog__content{
+  padding: 10px 20px 20px 20px;
+}
+
+
+.contact-dialog-upper{
+  height: 20%;
+  padding: 10px 10px 20px 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#upload-contact-photo-form{
+  margin-top:10px
+}
+
+.mdl-button--icon {
+  position: absolute;
+  top:0;
+  right:0;
+  margin: 8px;
 }
