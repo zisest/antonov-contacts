@@ -351,6 +351,7 @@ function expandContactDialog(contactID){
     expandContactDialogElement.showModal();
     expandContactDialogElement.querySelector('#expand-contact-table').innerHTML = '';
     expandContactDialogElement.querySelector('.social-media').innerHTML = '';
+    expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', 'images/profile_placeholder.png');
 
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
         expandContactDialogElement.querySelector('.contact-name').innerHTML = snapshot.val()['First--name'] +
@@ -388,7 +389,7 @@ function expandContactDialog(contactID){
                 </tr>` ;
             delete data['E-mail'];
         }
-        if(data['Phone-number']){
+        if(data['Phone--number']){
             expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
                 `<tr class="Phone--number">
                 <td class="mdl-data-table__cell--non-numeric">Phone number</td>
@@ -408,7 +409,7 @@ function expandContactDialog(contactID){
             expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
                 `<tr class="Address">
                 <td class="mdl-data-table__cell--non-numeric">Address</td>
-                <td class="mdl-data-table__cell--non-numeric"><a href='https://maps.google.com/?q=${data['Address']}'>${data['Address']}</a></td>
+                <td class="mdl-data-table__cell--non-numeric"><a href='https://maps.google.com/?q=${data['Address']}' target="_blank">${data['Address']}</a></td>
                 </tr>` ;
             delete data['Address'];
         }
@@ -431,7 +432,7 @@ function expandContactDialog(contactID){
                 case 'Facebook':
                 case 'Twitter':
                     expandContactDialogElement.querySelector('.social-media').innerHTML +=
-                        `<a href='https://${field}.com/${data[field]}/'><i class="fab fa-${field.toLowerCase()}"></i></a>`;
+                        `<a href='https://${field}.com/${data[field]}/' target="_blank"><i class="fab fa-${field.toLowerCase()}"></i></a>`;
                     break;
                 default:
                     expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
@@ -448,11 +449,17 @@ expandContactDialogElement.querySelector('.close').addEventListener('click', fun
     expandContactDialogElement.removeAttribute('name');
     expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', 'images/profile_placeholder.png');
     expandContactDialogElement.close();
+    expandContactDialogElement.querySelector('#expand-contact-table').innerHTML = '';
+    expandContactDialogElement.querySelector('.social-media').innerHTML = '';
+
 });
 expandContactDialogElement.querySelector('.deleteContactButton').addEventListener('click', function() {
     deleteContact(expandContactDialogElement.getAttribute('name'));
     expandContactDialogElement.close();
     contactListEmpty();
+    expandContactDialogElement.querySelector('#expand-contact-table').innerHTML = '';
+    expandContactDialogElement.querySelector('.social-media').innerHTML = '';
+    expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', 'images/profile_placeholder.png');
 });
 
 //Listening to clicks on contacts
@@ -509,10 +516,143 @@ document.getElementById('open-contact-edit-btn').addEventListener('click',
     });
 
 function openContactEdit(contactID){
+    //clearing everything
+    expandContactDialogElement.close();
+    document.querySelector('.ecp-img').setAttribute('src', 'images/profile_placeholder.png');
+    document.getElementById('edit-contact-dialog').querySelector('.mdl-chip__text').innerHTML = 'Upload contact photo';
+    document.getElementById('edit-contact-dialog').querySelector('.ecp-description').innerHTML ='add_a_photo';
+    document.getElementById('edit-contact-photo').value = '';
 
+    //filling the form
+    document.getElementById('edit-contact-dialog').setAttribute('name', contactID);
+    document.getElementById('edit-contact-dialog').querySelectorAll('input[type="text"], input[type="email"]').forEach(function (field){
+        field.value = '';
+        field.closest('div').classList.remove('is-valid', 'is-invalid', 'is-dirty');
 
+        if(document.querySelector(`.${field.id.split('_')[1]}`)){
+            field.value = document.querySelector(`.${field.id.split('_')[1]}`).getElementsByTagName('td')[1].textContent;
+            field.closest('div').classList.add('is-dirty');
+            field.closest('div').classList.add('is-valid');
+        }
+    });
+
+    firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
+        if(snapshot.val().VK) {
+            document.getElementById('edit_VK').value = snapshot.val().VK;
+            document.getElementById('edit_VK').closest('div').classList.add('is-dirty');
+        }
+        if(snapshot.val().Instagram) {
+            document.getElementById('edit_Instagram').value = snapshot.val().Instagram;
+            document.getElementById('edit_Instagram').closest('div').classList.add('is-dirty');
+        }
+        if(snapshot.val().Facebook) {
+            document.getElementById('edit_Facebook').value = snapshot.val().Facebook;
+            document.getElementById('edit_Facebook').closest('div').classList.add('is-dirty');
+        }
+        if(snapshot.val().Twitter) {
+            document.getElementById('edit_Twitter').value = snapshot.val().Twitter;
+            document.getElementById('edit_Twitter').closest('div').classList.add('is-dirty');
+        }
+        if(snapshot.val().photoURL){
+            document.querySelector('.ecp-img').setAttribute('src', snapshot.val().photoURL);
+            document.getElementById('edit-contact-dialog').querySelector('.mdl-chip__text').innerHTML = 'Change contact photo';
+            document.getElementById('edit-contact-dialog').querySelector('.ecp-description').innerHTML ='edit';
+        }
+    });
+    document.getElementById('edit-contact-dialog').showModal();
 }
+document.getElementById('edit-contact-dialog').querySelector('.close').addEventListener('click', function() {
+    document.getElementById('edit-contact-dialog').removeAttribute('name');
+    document.getElementById('edit-contact-dialog').close();
+    expandContactDialogElement.showModal();
+});
+document.getElementById('edit-contact-dialog').querySelector('#edit-contact-btn').addEventListener('click', function() {
+    document.getElementById('edit-contact-dialog').close();
+    //expandContactDialog(document.getElementById('edit-contact-dialog').getAttribute('name'))
+    //document.getElementById('edit-contact-dialog').removeAttribute('name');
+});
 
+
+document.getElementById('edit-contact-photo').addEventListener('change', function () {
+    var file = document.getElementById('edit-contact-photo').files[0];
+    if ((!file.type.match('image/jpeg')) && (!file.type.match('image/png'))) {
+        var data = {
+            message: 'You can only upload images',
+            timeout: 2000
+        };
+        snackbarElement.MaterialSnackbar.showSnackbar(data);
+        document.getElementById('edit-contact-photo').value = '';
+        return;
+    }else if(file.size > 5242880){
+        data = {
+            message: 'File should not be larger than 5 MB',
+            timeout: 2000
+        };
+        snackbarElement.MaterialSnackbar.showSnackbar(data);
+        document.getElementById('edit-contact-photo').value = '';
+        return;
+    }
+
+    document.querySelector('.ecp-img').setAttribute('src', URL.createObjectURL(file));
+    document.getElementById('edit-contact-dialog').querySelector('.mdl-chip__text').innerHTML = file.name;
+    document.getElementById('edit-contact-dialog').querySelector('.ecp-description').innerHTML ='edit';
+})
+
+
+function editContact() {
+    var contactID = document.getElementById('edit-contact-dialog').getAttribute('name');
+    contactListEmpty();
+    var contactRef = firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID + '/');
+   // var newContactRef =  contactListRef.push();
+
+
+    document.getElementById('edit-contact-dialog').querySelectorAll('.mdl-textfield__input').forEach(function(field){
+        var fieldName = field.id.split('_')[1];
+        if (field.value != '') {
+            contactRef.update({
+                [fieldName]: field.value
+            }).catch(function (error) {
+                console.error('Error writing to Realtime Database:', error);
+            });
+        } else if(fieldName != 'First--name'){
+            contactRef.child(fieldName).remove().catch(function (error) {
+                console.error('Error writing to Realtime Database:', error);
+            });
+        }
+    });
+    //Image upload
+
+    if(document.getElementById('edit-contact-photo').value != '') {
+        //deleting previous one
+        firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID + '/photoURL/').once('value').then(function (snapshot) {
+            if(snapshot.exists()){//WIP
+                var fileRef = firebase.storage().refFromURL(snapshot.val());
+                fileRef.delete().then(function() {
+                    console.log('Contact photo deleted successfully')
+                }).catch(function(error) {
+                    console.log('An error occurred when deleting contact photo: ' + error)
+                });
+            }
+        });
+
+        //uploading new one
+        var file = document.getElementById('edit-contact-photo').files[0];
+        var filePath = firebase.auth().currentUser.uid + '/' + contactID + '/' + file.name;
+        firebase.storage().ref(filePath).put(file).then(function (fileSnapshot) {
+            return fileSnapshot.ref.getDownloadURL().then(function (url) {
+                expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', url)
+                return contactRef.update({
+                    photoURL: url
+                    // storageURL: fileSnapshot.metadata.fullPath
+                });
+            });
+        }).catch(function (error) {
+            console.error('There was an error uploading a file to Cloud Storage:', error);
+        });
+    }
+
+    expandContactDialog(contactID);
+}
 
 
 

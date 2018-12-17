@@ -228,6 +228,7 @@
               <button class="mdl-button mdl-js-button mdl-button--icon " id="open-contact-edit-btn">
                 <i class="material-icons">edit</i>
               </button>
+
           </div>
           <div class="contact-dialog-lower">
             <table class="mdl-data-table mdl-js-data-table">
@@ -244,6 +245,99 @@
 
         </div>
       </dialog>
+
+
+      <!--EDIT CONTACT DIALOG-->
+      <dialog class="mdl-dialog mdl-cell--6-col" id="edit-contact-dialog">
+        <h4 class="mdl-dialog__title">Edit contact</h4>
+        <form action="javascript:editContact()">
+          <div class="mdl-dialog__content">            <!--PICTURE UPLOAD-->
+
+            <div>
+              <input id="edit-contact-photo" type="file" accept="image/png, image/jpeg" capture="camera">
+              <label for="edit-contact-photo" style="display:flex;">
+                <div class="ecp-wrap">
+                  <img class="ecp-img" src="images/profile_placeholder.png" />
+                  <div class="ecp-description-layer">
+                    <i class="material-icons ecp-description">add_a_photo</i>
+                  </div>
+                </div>
+                <span class="mdl-chip">
+                  <span class="mdl-chip__text">Upload contact photo</span>
+                </span>
+              </label>
+
+            </div>
+
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input required class="mdl-textfield__input" type="text" maxlength="32" id="edit_First--name">
+              <label class="mdl-textfield__label" for="edit_First--name">First name</label>
+              <span class="mdl-textfield__error">Required field</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" maxlength="32" id="edit_Last--name">
+              <label class="mdl-textfield__label" for="edit_Last--name">Last name</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" maxlength="32" id="edit_Middle--name">
+              <label class="mdl-textfield__label" for="edit_Middle--name">Middle name</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="edit_Phone--number">
+              <label class="mdl-textfield__label" for="edit_Phone--number">Phone number</label>
+              <span class="mdl-textfield__error">Only digits are allowed. 5-15 characters</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="edit_Work--phone">
+              <label class="mdl-textfield__label" for="edit_Work--phone">Work phone</label>
+              <span class="mdl-textfield__error">Only digits are allowed. 5-15 characters</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="email" maxlength="32" id="edit_E-mail">
+              <label class="mdl-textfield__label" for="edit_E-mail">E-mail</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" maxlength="128" id="edit_Address">
+              <label class="mdl-textfield__label" for="edit_Address">Address</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="^([0-2][0-9]|(3)[0-1])([.])(((0)[0-9])|((1)[0-2]))(([.])\d{4})?$" id="edit_Birthdate">
+              <label class="mdl-textfield__label" for="edit_Birthdate">Birthdate</label>
+              <span class="mdl-textfield__error">Correct format: 'dd.mm' or 'dd.mm.yyyy'</span>
+            </div>
+
+            <h6>Social media:</h6>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[0-9,a-z,A-Z,_]{2,16}" id="edit_VK">
+              <label class="mdl-textfield__label" for="edit_VK"><i class="fab fa-vk"></i> VKontakte</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[0-9,a-z,A-Z,_,.]{1,16}" id="edit_Instagram">
+              <label class="mdl-textfield__label" for="edit_Instagram"><i class="fab fa-instagram"></i> Instagram</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[0-9,a-z,A-Z,.]{5,16}" id="edit_Facebook">
+              <label class="mdl-textfield__label" for="edit_Facebook"><i class="fab fa-facebook"></i> Facebook</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" pattern="[0-9,a-z,A-Z,_]{1,16}" id="edit_Twitter">
+              <label class="mdl-textfield__label" for="edit_Twitter"><i class="fab fa-twitter"></i> Twitter</label>
+              <span class="mdl-textfield__error">Incorrect format</span>
+            </div>
+          </div>
+          <div class="mdl-dialog__actions">
+            <input type="submit" value="Save changes" class="mdl-button" id="edit-contact-btn" >
+            <button type="button" class="mdl-button close">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+
 
       <!--&lt;!&ndash; Deletion confirmation dialog &ndash;&gt;-->
       <!--<dialog class="mdl-dialog" id="deletion-confirmation-dialog">-->

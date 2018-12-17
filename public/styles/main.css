@@ -203,6 +203,11 @@ main, #contacts-card {
   max-width: 652px;
 }
 
+#edit-contact-dialog{
+    width: fit-content;
+    max-width: 652px;
+}
+
 
 .contact-container:hover {
   background-color: #F5F5F5;
@@ -364,9 +369,7 @@ border: none;
     max-height: 50vh;
 }
 
-contact-dialog-lower:hover{
-    cursor: copy;
-}
+
 
 
 /*expand contact table*/
@@ -404,4 +407,71 @@ padding-left: 13%;
 
 .First--name > .mdl-data-table td{
     border-top: none;
+}
+
+
+/*edit contact photo*/
+#edit-contact-photo{
+    display: none;
+}
+
+
+.ecp-wrap {
+    position: relative;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+}
+
+.ecp-description-layer {
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* transition effect. not necessary */
+    transition: opacity .2s, visibility .2s;
+}
+
+.ecp-wrap:hover .ecp-description-layer {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ecp-description {
+    font-size: 30px;
+    transition: .2s;
+    transform: translateY(1em);
+}
+
+.ecp-wrap:hover .ecp-description {
+    transform: translateY(0);
+}
+
+.ecp-img{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    object-fit: cover
+}
+
+
+#edit-contact-dialog .mdl-chip{
+    height: 30px;
+    line-height: 30px;
+}
+#edit-contact-dialog .mdl-chip__text{
+    font-size: 12px;
 }
