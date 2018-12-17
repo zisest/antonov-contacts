@@ -51,6 +51,10 @@ main, #contacts-card {
   float: right;
 }
 
+#snackbar{
+    z-index: 1;
+}
+
 .mdl-card {
   min-height: 0;
 }
@@ -292,6 +296,7 @@ border: none;
   margin: 8px;
 }
 
+/*main table*/
 #contacts>table{
     width: 100%;
     background-color: inherit;
@@ -361,4 +366,42 @@ border: none;
 
 contact-dialog-lower:hover{
     cursor: copy;
+}
+
+
+/*expand contact table*/
+.contact-dialog-lower > table{
+    width: 100%;
+    font-size: 15px;
+
+}
+
+.contact-dialog-lower > .mdl-data-table td:first-of-type{
+padding-left: 13%;
+}
+
+.contact-dialog-lower > .mdl-data-table td:last-of-type {
+    padding-right: 13%;
+    color: black;
+    text-align: right;
+}
+
+
+.First--name .mdl-data-table td{
+    border-top: none;
+}
+.contact-dialog-lower > .mdl-data-table td  {
+    height: 44px;
+    padding: 3px 10px;
+    border-top: 1px solid rgba(0,0,0,.03);
+    border-bottom: none;
+}
+
+.contact-dialog-lower > .mdl-data-table tbody tr {
+    height:44px;
+}
+
+
+.First--name > .mdl-data-table td{
+    border-top: none;
 }

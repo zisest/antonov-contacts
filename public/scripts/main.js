@@ -4,7 +4,7 @@ var userNameElement = document.getElementById('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signInButton2Element = document.getElementById('sign-in-2');
 var signOutButtonElement = document.getElementById('sign-out');
-var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+var snackbarElement = document.getElementById('snackbar');
 var welcomeBlockElement = document.getElementById('welcome-block');
 var contactsBlockElement = document.getElementById('contacts-block');
 var addContactButtonElement = document.getElementById('button-add-contact');
@@ -119,6 +119,7 @@ function authStateObserver(user) {
 
     }
 }
+
 
 
 //--------LOADING LIST OF CONTACTS------
@@ -267,7 +268,7 @@ document.getElementById('upload-contact-photo').addEventListener('change', funct
             message: 'You can only upload images',
             timeout: 2000
         };
-        signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+        snackbarElement.MaterialSnackbar.showSnackbar(data);
         document.getElementById('upload-contact-photo').value = '';
         return;
     }else if(file.size > 5242880){
@@ -275,7 +276,7 @@ document.getElementById('upload-contact-photo').addEventListener('change', funct
             message: 'File should not be larger than 5 MB',
             timeout: 2000
         };
-        signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+        snackbarElement.MaterialSnackbar.showSnackbar(data);
         document.getElementById('upload-contact-photo').value = '';
         return;
     }
@@ -348,54 +349,80 @@ document.getElementById('upload-contact-photo').addEventListener('change', funct
 function expandContactDialog(contactID){
     expandContactDialogElement.setAttribute('name', contactID);
     expandContactDialogElement.showModal();
-    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML =
-            ``;
+    expandContactDialogElement.querySelector('#expand-contact-table').innerHTML = '';
     expandContactDialogElement.querySelector('.social-media').innerHTML = '';
 
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
         expandContactDialogElement.querySelector('.contact-name').innerHTML = snapshot.val()['First--name'] +
             ((snapshot.val()['Last--name']) ? (' ' + snapshot.val()['Last--name']) : '');
         var data = snapshot.val();
+        if(data['First--name']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="First--name">
+                <td class="mdl-data-table__cell--non-numeric" style="border-top: none;">First name</td>
+                <td class="mdl-data-table__cell--non-numeric" style="border-top: none;">${data['First--name']}</td>
+                </tr>` ;
+            delete data['First--name'];
+        }
+        if(data['Middle--name']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Middle--name">
+                <td class="mdl-data-table__cell--non-numeric">Middle name</td>
+                <td class="mdl-data-table__cell--non-numeric">${data['Middle--name']}</td>
+                </tr>` ;
+            delete data['Middle--name'];
+        }
+        if(data['Last--name']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Last--name">
+                <td class="mdl-data-table__cell--non-numeric">Last name</td>
+                <td class="mdl-data-table__cell--non-numeric">${data['Last--name']}</td>
+                </tr>` ;
+            delete data['Last--name'];
+        }
+        if(data['E-mail']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="E-mail">
+                <td class="mdl-data-table__cell--non-numeric">E-mail</td>
+                <td class="mdl-data-table__cell--non-numeric"><a href='mailto:${data['E-mail']}'>${data['E-mail']}</a></td>
+                </tr>` ;
+            delete data['E-mail'];
+        }
+        if(data['Phone-number']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Phone--number">
+                <td class="mdl-data-table__cell--non-numeric">Phone number</td>
+                <td class="mdl-data-table__cell--non-numeric"><a href='tel:${data['Phone--number']}'>${data['Phone--number']}</a></td>
+                </tr>` ;
+            delete data['Phone--number'];
+        }
+        if(data['Work--phone']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Work--phone">
+                <td class="mdl-data-table__cell--non-numeric">Work phone</td>
+                <td class="mdl-data-table__cell--non-numeric"><a href='tel:${data['Work--phone']}'>${data['Work--phone']}</a></td>
+                </tr>` ;
+            delete data['Work--phone'];
+        }
+        if(data['Address']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Address">
+                <td class="mdl-data-table__cell--non-numeric">Address</td>
+                <td class="mdl-data-table__cell--non-numeric"><a href='https://maps.google.com/?q=${data['Address']}'>${data['Address']}</a></td>
+                </tr>` ;
+            delete data['Address'];
+        }
+        if(data['Birthdate']){
+            expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
+                `<tr class="Birthdate">
+                <td class="mdl-data-table__cell--non-numeric">Birthdate</td>
+                <td class="mdl-data-table__cell--non-numeric">${data['Birthdate']}</td>
+                </tr>` ;
+            delete data['Birthdate'];
+        }
+
         for (var field in data){
             switch(field){
-                case 'First--name':
-                case 'Middle--name':
-                case 'Last--name':
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
-                        `<tr class="${field}">
-                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
-                        <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
-                        </tr>` ;
-                    break;
-                case 'E-mail':
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
-                        `<tr class="${field}">
-                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
-                        <td class="mdl-data-table__cell--non-numeric"><a href='mailto:${data[field]}'>${data[field]}</a></td>
-                        </tr>`;
-                    break;
-                case 'Phone--number':
-                case 'Work--phone':
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
-                        `<tr class="${field}">
-                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
-                        <td class="mdl-data-table__cell--non-numeric"><a href='tel:${data[field]}'>${data[field]}</a></td>
-                        </tr>`;
-                    break;
-                case 'Address':
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
-                        `<tr class="${field}">
-                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
-                        <td class="mdl-data-table__cell--non-numeric"><a href='https://maps.google.com/?q=${data[field]}'>${data[field]}</a></td>
-                        </tr>`;
-                    break;
-                case 'Birthdate':
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
-                        `<tr class="${field}">
-                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
-                        <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
-                        </tr>`;
-                    break;
                 case 'photoURL':
                     expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', data[field]);
                     break;
@@ -407,21 +434,13 @@ function expandContactDialog(contactID){
                         `<a href='https://${field}.com/${data[field]}/'><i class="fab fa-${field.toLowerCase()}"></i></a>`;
                     break;
                 default:
-                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                    expandContactDialogElement.querySelector('#expand-contact-table').innerHTML +=
                         `<tr class="${field}">
                         <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
                         <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
                         </tr>` ;
                     break;
-
             }
-
-            // if(field != 'photoURL') {
-            //     expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML +=
-            //         `<div id='${field}'>${field.replace(/--/g, ' ')}: ${data[field]} </div>`
-            // }else{
-            //     expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', data[field]);
-            // }
         }
     });
 }
@@ -441,6 +460,22 @@ document.addEventListener('click', function (event) {
     if (event.target.closest('tr') && event.target.closest('tr').classList.contains('contact-container')){
         console.log(event.target.closest('tr').id);
         expandContactDialog(event.target.closest('tr').id);
+    }
+    //trying to copy field
+     else if (event.target.closest('tr') && event.target.closest('tbody').id == 'expand-contact-table'){
+
+        navigator.clipboard.writeText(event.target.closest('tr').getElementsByTagName('td')[1].textContent)
+            .then(() => {
+                var data = {
+                    message: event.target.closest('tr').getElementsByTagName('td')[0].textContent + ' copied to clipboard',
+                    timeout: 1000
+                };
+                snackbarElement.MaterialSnackbar.showSnackbar(data);
+            })
+            .catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+
     }
 }, false);
 
@@ -468,6 +503,15 @@ function deleteContact(contactID) {
 }
 //--------EDIT CONTACT---------
 
+document.getElementById('open-contact-edit-btn').addEventListener('click',
+    function(){
+        openContactEdit(document.getElementById('open-contact-edit-btn').closest('dialog').getAttribute('name'));
+    });
+
+function openContactEdit(contactID){
+
+
+}
 
 
 

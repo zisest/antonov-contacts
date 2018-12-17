@@ -225,15 +225,13 @@
               <div class="contact-name-container">
                 <h2 class="contact-name">Name Surname</h2>
               </div>
-              <button class="mdl-button mdl-js-button mdl-button--icon ">
+              <button class="mdl-button mdl-js-button mdl-button--icon " id="open-contact-edit-btn">
                 <i class="material-icons">edit</i>
               </button>
           </div>
           <div class="contact-dialog-lower">
             <table class="mdl-data-table mdl-js-data-table">
-              <tbody class="expand-contact-table">
-
-              </tbody>
+              <tbody id="expand-contact-table"></tbody>
             </table>
           </div>
         </div>
@@ -242,7 +240,6 @@
           <button type="button" class="mdl-button mdl-js-button deleteContactButton">Delete</button>
 
           <div class="social-media">
-
           </div>
 
         </div>
@@ -263,8 +260,8 @@
       <!--</dialog>-->
 
 
-       <!--must sign in snack bar (NOT NEEDED)-->
-      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+
+      <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
       </div>
