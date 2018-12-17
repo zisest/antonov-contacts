@@ -181,6 +181,7 @@ main, #contacts-card {
   margin: 8% 8% 0px 0px;
   position: absolute; right: 0;
   top: 0;
+  z-index: 1;
 }
 #contacts{
   width: calc(100% - 24px);
@@ -248,11 +249,15 @@ border: none;
 .contact-name{
   height: fit-content;
   word-wrap: break-word;
+  font-size: 40px;
 }
 .contact-name-container{
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 60%;
+  margin-left: 15px;
 }
 
 
@@ -260,6 +265,9 @@ border: none;
 .mdl-dialog{
   border-radius: 8px;
   padding: 10px 10px 14px 10px;
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 .mdl-dialog__content{
   padding: 10px 20px 20px 20px;
@@ -282,4 +290,41 @@ border: none;
   top:0;
   right:0;
   margin: 8px;
+}
+
+#contacts>table{
+    width: 100%;
+    background-color: inherit;
+}
+
+.table-photo{
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    object-fit: cover;
+    margin-right: 16px;
+}
+
+#contacts > .mdl-data-table tbody tr {
+    height: 64px;
+}
+.table-photo-name{
+    min-width: 60%;
+}
+#contacts >  .mdl-data-table td {
+    padding: 7px 16px;
+}
+
+#contacts >  .mdl-data-table td:first-of-type{
+    padding-left: 16px;
+    width: 60%;
+}
+
+#contacts >  .mdl-data-table th {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+#contacts >  .mdl-data-table {
+    font-size: 15px;
 }

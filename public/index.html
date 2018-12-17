@@ -102,7 +102,19 @@
               <i class="material-icons">add</i>
             </button>
             <p class="contacts-title">Contacts</p>
-            <div id="contacts" class="mdl-list"></div>
+            <div id="contacts" class="mdl-list" hidden>
+              <table class="mdl-data-table mdl-js-data-table">
+                <thead class="contact-table-head">
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric">Name</th>
+                  <th class="mdl-data-table__cell--non-numeric">E-mail</th>
+                  <th class="mdl-data-table__cell--non-numeric">Phone</th>
+                </tr>
+                </thead>
+                <tbody id="contact-table-body"></tbody>
+              </table>
+            </div>
+
 
             <!-- shown when list is empty -->
             <div id="contact-list-empty" hidden>
@@ -147,12 +159,12 @@
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="Phone--number">
             <label class="mdl-textfield__label" for="Phone--number">Phone number</label>
-            <span class="mdl-textfield__error">Digits only</span>
+            <span class="mdl-textfield__error">Only digits are allowed. 5-15 characters</span>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" pattern="[+]?[0-9]{5,15}" id="Work--phone">
             <label class="mdl-textfield__label" for="Work--phone">Work phone</label>
-            <span class="mdl-textfield__error">Digits only</span>
+            <span class="mdl-textfield__error">Only digits are allowed. 5-15 characters</span>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="email" maxlength="32" id="E-mail">
@@ -193,8 +205,14 @@
               </button>
           </div>
           <div class="contact-dialog-lower">
-
-
+            <div class="First--name"></div>
+            <div class="Middle--name"></div>
+            <div class="Last--name"></div>
+            <div class="E-mail"></div>
+            <div class="Phone--number"></div>
+            <div class="Work--phone"></div>
+            <div class="Address"></div>
+            <div class="Birthdate"></div>
           </div>
         </div>
         <div class="mdl-dialog__actions">

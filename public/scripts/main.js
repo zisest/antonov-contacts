@@ -18,6 +18,7 @@ var lastNameFieldElement = document.getElementById('Last--name');
 var numberFieldElement = document.getElementById('Phone--number');
 
 var contactListEmptyElement = document.getElementById('contact-list-empty')
+var contactTableBodyElement = document.getElementById('contact-table-body')
 
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
@@ -125,45 +126,56 @@ function loadContacts(uid) {
     // Loads all of the contacts
     var callback = function(snap) {
         //Hiding the 'You don't have any contacts + Create new ones' message
-        displayContact(snap.key, snap.val()['First--name'], snap.val()['Last--name'], snap.val().photoURL, snap.val()['Phone--number']);
+        //if(snap.val()['Phone--number'])
+
+        displayContact(snap.key, snap.val()['First--name'], snap.val()['Last--name'], snap.val()['E-mail'],
+            (snap.val()['Phone--number']) ? (snap.val()['Phone--number']) : (snap.val()['Work--phone']), snap.val().photoURL);
     };
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_added', callback);
     firebase.database().ref('/users/' + uid + '/contacts/').on('child_changed', callback);
+    firebase.database().ref('/users/' + uid + '/contacts/').on('child_removed', function(oldSnap){
+        contactTableBodyElement.removeChild(document.getElementById(oldSnap.key));
+        expandContactDialogElement.removeAttribute('name');
+        expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', 'images/profile_placeholder.png');
+
+    });
 }
 
 function contactListEmpty(time = 0) {
     setTimeout(function () {
-        if (contactsElement.innerHTML == ''){
+        if (contactTableBodyElement.innerHTML == ''){
             contactListEmptyElement.removeAttribute('hidden');
+            contactsElement.setAttribute('hidden', 'true');
         }else{
             contactListEmptyElement.setAttribute('hidden', true);
+            contactsElement.removeAttribute('hidden');
         }
     }, time)
 }
 
 
-//new template MDL:
-var CONTACT_TEMPLATE =
-    '<div class="contact-container mdl-list__item">'+
-    '<span class="mdl-list__item-primary-content">'+
-    '<i class="material-icons mdl-list__item-avatar">person</i>'+
-    '<span class="name"></span>'+
-    '</span>'+
-    '</div>';
+
+
 
 // Displays user's contacts
-function displayContact(key, firstname, lastname, phone) {
-    var div = document.getElementById(key);
-    if (!div) {
-        var container = document.createElement('div');
-        container.innerHTML = CONTACT_TEMPLATE;
-        div = container.firstChild;
-        div.setAttribute('id', key);
-        contactsElement.appendChild(div);
-        //div.addEventListener('click', function(){expandContactDialog(key); console.log('Clicked on ' + key)});
-    }
+function displayContact(key, firstname, lastname, email, phone, photoURL) {
 
-    div.querySelector('.name').textContent = firstname + ((lastname) ? (' ' + lastname) : '');
+    if (!(document.getElementById(key))){
+        contactTableBodyElement.innerHTML +=
+            `<tr id=${key} class="contact-container">
+                <td class="mdl-data-table__cell--non-numeric table-photo-name">
+                  <img src="images/profile_placeholder.png" class="table-photo"><span class="table-name"></span>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric table-email"></td>
+                <td class="mdl-data-table__cell--non-numeric table-phone"></td>
+             </tr>`;
+
+    }
+    contactTableBodyElement.querySelector(`#${key}`).querySelector('.table-name').textContent = firstname + ((lastname) ? (' ' + lastname) : '');
+    contactTableBodyElement.querySelector(`#${key}`).querySelector('.table-email').textContent = (email) ? email : '';
+    contactTableBodyElement.querySelector(`#${key}`).querySelector('.table-phone').textContent = (phone) ? phone : '';
+    if (photoURL) contactTableBodyElement.querySelector(`#${key}`).querySelector('.table-photo').setAttribute('src', photoURL);
+    //div.querySelector('.name').textContent = firstname + ((lastname) ? (' ' + lastname) : '');
 
     // // Show the card fading-in and scroll to view the new message.
     // setTimeout(function() {div.classList.add('visible')}, 1);
@@ -336,10 +348,17 @@ document.getElementById('upload-contact-photo').addEventListener('change', funct
 function expandContactDialog(contactID){
     expandContactDialogElement.setAttribute('name', contactID);
     expandContactDialogElement.showModal();
-    expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML = '';
+    expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML =
+            `<div class="First--name"></div>
+            <div class="Middle--name"></div>
+            <div class="Last--name"></div>
+            <div class="E-mail"></div>
+            <div class="Phone--number"></div>
+            <div class="Work--phone"></div>
+            <div class="Address"></div>
+            <div class="Birthdate"></div>`;
 
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
-
         expandContactDialogElement.querySelector('.contact-name').innerHTML = snapshot.val()['First--name'] +
             ((snapshot.val()['Last--name']) ? (' ' + snapshot.val()['Last--name']) : '');
         var data = snapshot.val();
@@ -360,37 +379,33 @@ expandContactDialogElement.querySelector('.close').addEventListener('click', fun
     expandContactDialogElement.close();
 });
 expandContactDialogElement.querySelector('.deleteContactButton').addEventListener('click', function() {
-
     deleteContact(expandContactDialogElement.getAttribute('name'));
-    contactsElement.removeChild(document.getElementById(expandContactDialogElement.getAttribute('name')));
-    expandContactDialogElement.removeAttribute('name');
-    expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', 'images/profile_placeholder.png');
     expandContactDialogElement.close();
     contactListEmpty();
 });
 
 //Listening to clicks on contacts
 document.addEventListener('click', function (event) {
-    if (event.target.closest('div').classList.contains('contact-container')){
-        console.log(event.target.closest('div').id);
-        expandContactDialog(event.target.closest('div').id);
+    if (event.target.closest('tr') && event.target.closest('tr').classList.contains('contact-container')){
+        console.log(event.target.closest('tr').id);
+        expandContactDialog(event.target.closest('tr').id);
     }
 }, false);
 
 
 //---------------DELETE CONTACT---------------
 function deleteContact(contactID) {
+    //contactTableBodyElement.removeChild(document.getElementById(contactID));
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID + '/photoURL/').once('value').then(function (snapshot) {
         if(snapshot.exists()){//WIP
             var fileRef = firebase.storage().refFromURL(snapshot.val());
-
             fileRef.delete().then(function() {
-               console.log('Contact photo deleted successfully')
+                console.log('Contact photo deleted successfully')
             }).catch(function(error) {
                 console.log('An error occurred when deleting contact photo: ' + error)
             });
         }
-    })
+    });
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).remove()
         .then(function() {
             console.log(contactID + " successfully removed")
