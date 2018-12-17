@@ -308,16 +308,16 @@ border: none;
 #contacts > .mdl-data-table tbody tr {
     height: 64px;
 }
-.table-photo-name{
-    min-width: 60%;
-}
+
 #contacts >  .mdl-data-table td {
     padding: 7px 16px;
+    border-top: 1px solid rgba(0,0,0,.04);
+    border-bottom: none;
 }
 
 #contacts >  .mdl-data-table td:first-of-type{
     padding-left: 16px;
-    width: 60%;
+    width: 58%;
 }
 
 #contacts >  .mdl-data-table th {
@@ -327,4 +327,38 @@ border: none;
 
 #contacts >  .mdl-data-table {
     font-size: 15px;
+}
+
+.contact-dialog-lower  a{
+    text-decoration: none;
+    font-weight: 400;
+
+}
+
+
+#new-contact-dialog h6{
+    margin: 16px 8px 4px 8px;
+    font-size: 18px
+}
+
+.social-media{
+    position: absolute;
+    left: 15px;
+    bottom: 0;
+    font-size: 24px;
+}
+
+.social-media a{
+    color: rgba(0, 0, 0, 0.54);
+    margin-right: 10px;
+
+}
+
+.contact-dialog-lower{
+    overflow: auto;
+    max-height: 50vh;
+}
+
+contact-dialog-lower:hover{
+    cursor: copy;
 }

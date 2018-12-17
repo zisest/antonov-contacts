@@ -348,28 +348,80 @@ document.getElementById('upload-contact-photo').addEventListener('change', funct
 function expandContactDialog(contactID){
     expandContactDialogElement.setAttribute('name', contactID);
     expandContactDialogElement.showModal();
-    expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML =
-            `<div class="First--name"></div>
-            <div class="Middle--name"></div>
-            <div class="Last--name"></div>
-            <div class="E-mail"></div>
-            <div class="Phone--number"></div>
-            <div class="Work--phone"></div>
-            <div class="Address"></div>
-            <div class="Birthdate"></div>`;
+    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML =
+            ``;
+    expandContactDialogElement.querySelector('.social-media').innerHTML = '';
 
     firebase.database().ref('/users/' + getUserID() + '/contacts/' + contactID).once('value').then(function(snapshot) {
         expandContactDialogElement.querySelector('.contact-name').innerHTML = snapshot.val()['First--name'] +
             ((snapshot.val()['Last--name']) ? (' ' + snapshot.val()['Last--name']) : '');
         var data = snapshot.val();
-        //console.log(data);
         for (var field in data){
-            if(field != 'photoURL') {
-                expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML +=
-                    `<div id='${field}'>${field.replace(/--/g, ' ')}: ${data[field]} </div>`
-            }else{
-                expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', data[field]);
+            switch(field){
+                case 'First--name':
+                case 'Middle--name':
+                case 'Last--name':
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
+                        </tr>` ;
+                    break;
+                case 'E-mail':
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric"><a href='mailto:${data[field]}'>${data[field]}</a></td>
+                        </tr>`;
+                    break;
+                case 'Phone--number':
+                case 'Work--phone':
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric"><a href='tel:${data[field]}'>${data[field]}</a></td>
+                        </tr>`;
+                    break;
+                case 'Address':
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric"><a href='https://maps.google.com/?q=${data[field]}'>${data[field]}</a></td>
+                        </tr>`;
+                    break;
+                case 'Birthdate':
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
+                        </tr>`;
+                    break;
+                case 'photoURL':
+                    expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', data[field]);
+                    break;
+                case 'VK':
+                case 'Instagram':
+                case 'Facebook':
+                case 'Twitter':
+                    expandContactDialogElement.querySelector('.social-media').innerHTML +=
+                        `<a href='https://${field}.com/${data[field]}/'><i class="fab fa-${field.toLowerCase()}"></i></a>`;
+                    break;
+                default:
+                    expandContactDialogElement.querySelector('.expand-contact-table').innerHTML +=
+                        `<tr class="${field}">
+                        <td class="mdl-data-table__cell--non-numeric">${field.replace(/--/g, ' ')}</td>
+                        <td class="mdl-data-table__cell--non-numeric">${data[field]}</td>
+                        </tr>` ;
+                    break;
+
             }
+
+            // if(field != 'photoURL') {
+            //     expandContactDialogElement.querySelector('.contact-dialog-lower').innerHTML +=
+            //         `<div id='${field}'>${field.replace(/--/g, ' ')}: ${data[field]} </div>`
+            // }else{
+            //     expandContactDialogElement.querySelector('.contact-photo').setAttribute('src', data[field]);
+            // }
         }
     });
 }
