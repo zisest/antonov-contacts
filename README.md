@@ -15,4 +15,3 @@ The app is hosted at [antonov-contacts.firebaseapp.com](https://antonov-contacts
 The project was created using:
 - [Firebase](https://firebase.google.com) - Realtime Database, Storage, Auth
 - [MDL](https://getmdl.io) - Material Design components library by Google
-- [Express.js](https://expressjs.com)
